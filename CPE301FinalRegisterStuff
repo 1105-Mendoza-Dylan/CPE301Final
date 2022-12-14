@@ -21,7 +21,7 @@ DHT dht(DHTPIN, DHTTYPE);
 
 //pins 22, 23, 24, 25 will be Port A = 0001111
 
-volatile unsigned char* port_d = (unsigned char*) 0x2B;
+volatile unsigned char* port_d = (unsigned char*) 0x2B;     
 volatile unsigned char* ddr_d = (unsigned char*) 0x2A;
 volatile unsigned char* pin_d = (unsigned char*) 0x29;
 volatile unsigned char* port_k = (unsigned char*) 0x108;
@@ -41,19 +41,18 @@ volatile unsigned char* ddr_g = (unsigned char*) 0x33;
 volatile unsigned char* pin_g = (unsigned char*) 0x32;
 
 
-const int rs = 11; //regiister
-const int en = 10; //regiister
-const int d4 = 22; //regiister
-const int d5 = 23; //regiister
-const int d6 = 24; //regiister
-const int d7 = 25; //regiister
-
-const int fan =13; //regiister
-const int power = 2; //regiister
-const int error = 5; //regiister
-const int on = 6; //regiister
-const int off = 4; //regiister
-const int level = A0; //regiister
+//const int rs = 11; //regiister
+//const int en = 10; //regiister
+//const int d4 = 22; //regiister
+//const int d5 = 23; //regiister
+//const int d6 = 24; //regiister
+//const int d7 = 25; //regiister
+//const int fan =13; //regiister
+//const int power = 2; //regiister
+//const int error = 5; //regiister
+//const int on = 6; //regiister
+//const int off = 4; //regiister
+//const int level = A0; //regiister
 
 //Variables
 float temp;
