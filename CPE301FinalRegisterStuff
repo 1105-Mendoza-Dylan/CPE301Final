@@ -63,8 +63,8 @@ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 void setup() {
   // put your setup code here, to run once:
-pinMode(fan, OUTPUT); //register
-pinMode(power, INPUT); // register
+DDR_B &= 0b10000000;  //pinMode(fan, OUTPUT); register
+DDR_E |= 0b11101111 //pinMode(power, INPUT);
 
 Serial.begin(9600); //register
 lcd.begin(16, 2);
@@ -87,17 +87,18 @@ void loop() {
 
   //turns fan on or off depending on read temperature from the above portion
   if(temp>24){
-    digitalWrite(fan,HIGH); //register
+    Port_B = 0b10000000; //digitalWrite(fan,HIGH); register
   }else if(temp<20){
-    digitalWrite(fan,LOW); //register
+    Port_B = 0b01111111; //digitalWrite(fan,LOW); register
   }
   
 
   //error portion, if there is an error happening, it is detected here
   if(isnan(temp) || isnan(hum)|| water<180){
+  
    Serial.println("Error"); //register
-   digitalWrite(error, HIGH); //register
-   digitalWrite(on, LOW); //regsiter
+   Port_E = 0b00100000;  //digitalWrite(error, HIGH); register
+   Port_H = 0b  //digitalWrite(on, LOW);  regsiter
    digitalWrite(off, LOW); //register
    digitalWrite(fan,LOW); //register
    return;
