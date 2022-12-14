@@ -1,29 +1,28 @@
-//CPE301 Final Project
-//Dylan Mendoza
-//Caleb Lindner
-//Hunter Robinson
-
 #include "DHT.h"
 #include <LiquidCrystal.h>
+#include <Stepper.h>
 
 #define DHTTYPE DHT11
 #define DHTPIN 12
+#define STEPS 32
 
 DHT dht(DHTPIN, DHTTYPE);
+Stepper stepper(STEPS, 30,32,31,33);
 
-const int rs = 11; //regiister
-const int en = 10; //regiister
-const int d4 = 22; //regiister
-const int d5 = 23; //regiister
-const int d6 = 24; //regiister
-const int d7 = 25; //regiister
-
-const int fan =13; //regiister
-const int power = 2; //regiister
-const int error = 5; //regiister
-const int on = 6; //regiister
-const int off = 4; //regiister
-const int level = A0; //regiister
+//Pin I/O
+const int rs = 11; //resgiter
+const int en = 10; //register
+const int d4 = 22; //register
+const int d5 = 23; //register
+const int d6 = 24; //register
+const int d7 = 25; //register
+const int fan =13; //register
+const int power = 2; //register
+const int error = 5; //register
+const int on = 6; //resgiter
+const int off = 4; //register
+const int level = A0; //register
+const int angle = A1; //register
 
 //Variables
 float temp;
@@ -31,23 +30,39 @@ float hum;
 int powerStateCurrent = 0;
 int powerStateLast;
 int systemState = 1;
-float water;
+float water = 0;
+int Pval = 0;
+int potVal = 0;
 
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 void setup() {
   // put your setup code here, to run once:
 pinMode(fan, OUTPUT); //register
-pinMode(power, INPUT); // register
+pinMode(power, INPUT); //register
 
 Serial.begin(9600); //register
+
+stepper.setSpeed(200);
 lcd.begin(16, 2);
 dht.begin();
 }
 
 void loop() {
 
-  water = analogRead(level); //collect water level in cooler, register
+  //Stepper motor control portion
+  potVal = map(analogRead(A1),0,1024,0,500);
+    if (potVal>Pval){
+       stepper.step(5);
+    }
+    if (potVal<Pval){
+      stepper.step(-5);
+    }
+Pval = potVal;
+  
+
+  water = analogRead(level); //collect water level in cooler
+  Serial.println(water);
 
   //LCD Display Portion, takes readings and then writes temp and hummidity to lcd
   temp = dht.readTemperature();
@@ -61,19 +76,19 @@ void loop() {
 
   //turns fan on or off depending on read temperature from the above portion
   if(temp>24){
-    digitalWrite(fan,HIGH); //register
+    digitalWrite(fan,HIGH);
   }else if(temp<20){
-    digitalWrite(fan,LOW); //register
+    digitalWrite(fan,LOW);
   }
   
 
   //error portion, if there is an error happening, it is detected here
-  if(isnan(temp) || isnan(hum)|| water<180){
-   Serial.println("Error"); //register
-   digitalWrite(error, HIGH); //register
-   digitalWrite(on, LOW); //regsiter
-   digitalWrite(off, LOW); //register
-   digitalWrite(fan,LOW); //register
+  if(isnan(temp) || isnan(hum)|| water<300){
+   Serial.println("Error");
+   digitalWrite(error, HIGH);
+   digitalWrite(on, LOW);
+   digitalWrite(off, LOW);
+   digitalWrite(fan,LOW);
    return;
   }
 
@@ -85,14 +100,14 @@ if(powerStateCurrent == HIGH && powerStateLast == LOW){ //using a pull down resi
 }
 
 if(systemState == 0){
-  digitalWrite(off,HIGH); //register
-  digitalWrite(on,LOW); //register
-  digitalWrite(fan,LOW); //register
+  digitalWrite(off,HIGH);
+  digitalWrite(on,LOW);
+  digitalWrite(fan,LOW);
   lcd.noDisplay();
 }
 else{
-  digitalWrite(on,HIGH); //register
-  digitalWrite(off,LOW); //register
+  digitalWrite(on,HIGH);
+  digitalWrite(off,LOW);
   lcd.display();
   return;
 }
