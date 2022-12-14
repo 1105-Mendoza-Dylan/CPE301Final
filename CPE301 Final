@@ -11,20 +11,21 @@
 
 DHT dht(DHTPIN, DHTTYPE);
 
-const int rs = 11;
-const int en = 10;
-const int d4 = 22;
-const int d5 = 23;
-const int d6 = 24;
-const int d7 = 25;
+const int rs = 11; //regiister
+const int en = 10; //regiister
+const int d4 = 22; //regiister
+const int d5 = 23; //regiister
+const int d6 = 24; //regiister
+const int d7 = 25; //regiister
 
-const int fan =13;
-const int power = 2;
-const int error = 5;
-const int on = 6;
-const int off = 4;
-const int level = A0;
+const int fan =13; //regiister
+const int power = 2; //regiister
+const int error = 5; //regiister
+const int on = 6; //regiister
+const int off = 4; //regiister
+const int level = A0; //regiister
 
+//Variables
 float temp;
 float hum;
 int powerStateCurrent = 0;
