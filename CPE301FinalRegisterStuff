@@ -5,14 +5,11 @@
 
 #include "DHT.h"
 #include <LiquidCrystal.h>
-#include <Stepper.h>
 
 #define DHTTYPE DHT11
 #define DHTPIN 12
-#define STEPS 32
 
 DHT dht(DHTPIN, DHTTYPE);
-Stepper stepper(STEPS, 30,32,31,33);
 
 //pins used = A0, 2, 4, 5, 6, 10, 11, 13, 22, 23, 24, 25
 
@@ -71,26 +68,14 @@ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 void setup() {
   // put your setup code here, to run once:
 DDR_B &= 0b10000000;  //pinMode(fan, OUTPUT); register
-DDR_E |= 0b11101111 //pinMode(power, INPUT);
+DDR_E |= 0b11101111; //pinMode(power, INPUT);
 
 Serial.begin(9600); //register
-
-stepper.setSpeed(200);
 lcd.begin(16, 2);
 dht.begin();
 }
 
 void loop() {
-
-  //Stepper motor control portion, taken from arduino projects website
-  potVal = map(analogRead(A1),0,1024,0,500);
-    if (potVal>Pval){
-       stepper.step(5);
-    }
-    if (potVal<Pval){
-      stepper.step(-5);
-    }
-  Pval = potVal;
 
   water = analogRead(level); //collect water level in cooler, register
 
@@ -117,9 +102,9 @@ void loop() {
   
    Serial.println("Error"); //register
    Port_E = 0b00100000;  //digitalWrite(error, HIGH); register
-   Port_H = 0b11110111  //digitalWrite(on, LOW);  regsiter
-   Port_G = 0b11011111 //digitalWrite(off, LOW); //register
-   q  //digitalWrite(fan,LOW); //register
+   Port_H = 0b11110111;  //digitalWrite(on, LOW);  regsiter
+   Port_G = 0b11011111; //digitalWrite(off, LOW); //register
+   Port_B = 0b01111111; //digitalWrite(fan,LOW); //register
    return;
   }
 
@@ -131,14 +116,14 @@ if(powerStateCurrent == HIGH && powerStateLast == LOW){ //using a pull down resi
 }
 
 if(systemState == 0){
-  digitalWrite(off,HIGH); //register
-  digitalWrite(on,LOW); //register
-  digitalWrite(fan,LOW); //register
+  Port_G = 0b00100000; //digitalWrite(off,HIGH); register
+  Port_H = 0b11110111; //digitalWrite(on,LOW); register
+  Port_B = 0b01111111;  //digitalWrite(fan,LOW); register
   lcd.noDisplay();
 }
 else{
-  digitalWrite(on,HIGH); //register
-  digitalWrite(off,LOW); //register
+  Port_H = 0b00001000; //digitalWrite(on,HIGH); register
+  Port_G = 0b11011111;  //digitalWrite(off,LOW); register
   lcd.display();
   return;
 }
