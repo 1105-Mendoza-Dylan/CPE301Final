@@ -36,6 +36,10 @@ volatile unsigned char* pin_h = (unsigned char*) 0x100;
 volatile unsigned char* port_b = (unsigned char*) 0x25;
 volatile unsigned char* ddr_b = (unsigned char*) 0x24;
 volatile unsigned char* pin_b = (unsigned char*) 0x23;
+volatile unsigned char* port_g = (unsigned char*) 0x34;
+volatile unsigned char* ddr_g = (unsigned char*) 0x33;
+volatile unsigned char* pin_g = (unsigned char*) 0x32;
+
 
 const int rs = 11; //regiister
 const int en = 10; //regiister
@@ -98,9 +102,9 @@ void loop() {
   
    Serial.println("Error"); //register
    Port_E = 0b00100000;  //digitalWrite(error, HIGH); register
-   Port_H = 0b  //digitalWrite(on, LOW);  regsiter
-   digitalWrite(off, LOW); //register
-   digitalWrite(fan,LOW); //register
+   Port_H = 0b11110111  //digitalWrite(on, LOW);  regsiter
+   Port_G = 0b11011111 //digitalWrite(off, LOW); //register
+   q  //digitalWrite(fan,LOW); //register
    return;
   }
 
